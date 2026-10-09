@@ -4,37 +4,38 @@ A terminal-based AI assistant built with Python and Gemini. It uses a custom ReA
 
 ## Architecture & Workflow Diagram
 
+
 ┌─────────────────────────────────────────┐
 │              User Request               │
 └────────────────────┬────────────────────┘
-│
-▼
+                     │
+                     ▼
 ┌─────────────────────────────────────────┐
 │         ReAct Agent Loop (LLM)          │
 │          (Reason - Act - Observe)       │
 └────────────────────┬────────────────────┘
-│
-▼
+                     │
+                     ▼
 ┌─────────────────────────────────────────┐
 │        Tool Selection & Schema          │
 │          (Pydantic Validation)          │
 └────────────────────┬────────────────────┘
-│
-▼
+                     │
+                     ▼
 ┌─────────────────────────────────────────┐
 │            Tools Execution              │
 │  ├─ Calculator                          │
 │  ├─ Weather API (Open-Meteo)            │
 │  └─ SQLite Notes DB                     │
 └────────────────────┬────────────────────┘
-│
-▼
+                     │
+                     ▼
 ┌─────────────────────────────────────────┐
 │          Observation Channel            │
 │       (Feed context back to LLM)        │
 └────────────────────┬────────────────────┘
-│
-▼
+                     │
+                     ▼
 ┌─────────────────────────────────────────┐
 │          Pydantic JSON Output           │
 └─────────────────────────────────────────┘
