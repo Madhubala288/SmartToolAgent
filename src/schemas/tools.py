@@ -1,6 +1,10 @@
 import inspect
 from typing import Any, Callable, Dict, List
-from agent.tools import calculator, get_weather, add_note, list_notes
+
+from agent.tools.calculator import calculator
+from agent.tools.weather import get_weather
+from agent.tools.notes import add_note, list_notes
+
 
 
 def function_to_schema(func: Callable) -> Dict[str, Any]:
@@ -46,7 +50,7 @@ def function_to_schema(func: Callable) -> Dict[str, Any]:
 
 
 # Automatically generate tool schemas from function docstrings & signatures
-TOOLS_SCHEMA: List[Dict[str, Any]] = [
+TOOL_SCHEMAS: List[Dict[str, Any]] = [
     function_to_schema(calculator),
     function_to_schema(get_weather),
     function_to_schema(add_note),

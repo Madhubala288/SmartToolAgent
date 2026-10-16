@@ -23,4 +23,5 @@ __pycache__/
 
 # OS
 .DS_Store
-Thumbs.db
+Thumbs.dbBLOCKED
+src/smarttoolagent.egg-info/

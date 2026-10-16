@@ -1,6 +1,8 @@
 import sqlite3
 from pathlib import Path
+
 DB_PATH = Path("data/notes.db")
+
 def initialize_database():
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     with sqlite3.connect(DB_PATH) as connection:
@@ -12,6 +14,7 @@ def initialize_database():
             )
             """
         )
+
 def add_note(content: str) -> dict:
     """
     Save a note in the SQLite database.
@@ -27,6 +30,29 @@ def add_note(content: str) -> dict:
         "id": note_id,
         "content": content,
     }
+
+# Alias so save_note points to the decorated add_note tool
+save_note = add_note
+
+def list_notes() -> list[dict]:
+    """
+    Return all saved notes.
+    """
+    initialize_database()
+    with sqlite3.connect(DB_PATH) as connection:
+        rows = connection.execute(
+            "SELECT id, content FROM notes ORDER BY id"
+        ).fetchall()
+    return [
+        {
+            "id": row[0],
+            "content": row[1],
+        }
+        for row in rows
+    ]
+# Alias
+save_note = add_note
+
 def list_notes() -> list[dict]:
     """
     Return all saved notes.
