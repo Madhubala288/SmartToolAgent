@@ -1,25 +1,98 @@
-1. Workflow vs Agent
-Workflow: A hardcoded sequence of deterministic steps where execution follows a strict predefined path. Decision-making is explicit and coded via conditional statements.
+\# SmartToolAgent — Learning Notes
 
-Agent: An autonomous LLM-driven entity that dynamically decides which actions/tools to call based on the user request, context, and environment responses.
 
-2. Gemini OpenAI Compatibility
-Supported Parameters: messages, tools, tool_choice, temperature, max_tokens, response_format.
 
-Limitations: Slight differences in tool call format handling, token counting variations, and strict adherence to specific Pydantic JSON schemas compared to native OpenAI models.
+\## 1. Workflow vs Agent
 
-3. ReAct (Reason, Act, Observe) Cycle
-Reason: The model analyzes user intent and decides what tool or information is required.
 
-Act: The model outputs a tool call request with precise parameters.
 
-Observe: The agent executes the requested tool (e.g., SQLite lookup, API fetch) and feeds the output back into the conversation context.
+\*\*Workflow:\*\* A predefined sequence of steps controlled by program logic.
 
-Repeat / Answer: The cycle continues until the model has sufficient information to return the final answer.
 
-4. System Prompts Comparison
-Prompt A (Minimal): Fast response, but lacks structured formatting or proper confidence scoring.
 
-Prompt B (Strict Tool Execution): Accurately invokes tools when needed, returns rigid structured JSON output validated via Pydantic.
+\*\*Agent:\*\* An LLM-driven system that chooses tools dynamically based on the user's request and the results returned by those tools.
 
-Prompt C (Verbose Reasoning): High transparency in step-by-step reasoning, slightly slower performance due to longer output tokens.
+
+
+\## 2. Gemini OpenAI-Compatible API
+
+
+
+The project uses an OpenAI-compatible client to communicate with the configured LLM provider. Supported functionality depends on the provider and model. Tool calling and structured JSON output should be tested with the selected model.
+
+
+
+\## 3. ReAct Agent Loop
+
+
+
+\- \*\*Reason:\*\* Interpret the user's request and decide which action is needed.
+
+\- \*\*Act:\*\* Request a tool call from the model.
+
+\- \*\*Observe:\*\* Execute the tool and return its result to the model.
+
+\- \*\*Repeat:\*\* Continue until a final answer is generated or the step limit is reached.
+
+\- \*\*Validate:\*\* Parse the final JSON response with Pydantic and retry once if validation fails.
+
+
+
+\## 4. System Prompt Comparison
+
+
+
+Three system prompts should be tested using the same request and model. Record actual outputs instead of assuming which prompt performs best.
+
+
+
+| Prompt | Purpose | Actual Output | Correct Tool Selection? | Valid JSON? | Response Time |
+
+|---|---|---|---|---|---|
+
+| Minimal | Short, general instructions | Pending experiment | Pending | Pending | Pending |
+
+| Strict Tool Execution | Emphasizes appropriate tool use and structured responses | Pending experiment | Pending | Pending | Pending |
+
+| Verbose Instructions | Provides more detailed instructions | Pending experiment | Pending | Pending | Pending |
+
+
+
+\## 5. Experiment Procedure
+
+
+
+1\. Select one request that requires a tool, such as `What is 25 multiplied by 16?`
+
+2\. Run the same request with each of the three prompts.
+
+3\. Keep the model and other settings the same.
+
+4\. Record the complete final output, tools called, JSON validity, and elapsed time.
+
+5\. Compare correctness, tool selection, response structure, and latency.
+
+
+
+\## 6. Key Learning
+
+
+
+System prompts influence how an LLM interprets instructions and selects tools. However, prompt quality should be evaluated through repeatable experiments rather than assumptions. Tool execution, error handling, and Pydantic validation help make an agent more reliable.
+
+
+
+\## 7. Limitations
+
+
+
+\- Weather tools depend on external service availability and network access.
+
+\- LLM responses may vary between runs.
+
+\- Response time and token usage depend on the selected provider and model.
+
+\- The prompt comparison remains incomplete until the experiments and measurements are recorded.
+
+
+

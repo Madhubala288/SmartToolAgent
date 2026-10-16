@@ -221,3 +221,130 @@ The structure above summarizes the main components; individual files may vary as
 ## Development Notes
 
 See `LEARNING_NOTES.md` for project learning notes and prompt experiments. See `tests/` for the project's test cases and evaluation questions.
+
+## Execution Evidence
+
+The following scenarios should be run and their actual terminal output recorded before submission.
+
+### Run 1 — Calculator Tool
+
+**Input**
+```text
+What is 25 times 5?
+```
+
+**Expected verification:** The calculator tool is called, the answer is `125`, and the final response contains the required fields.
+
+**Actual output:** 
+You: what is 25*5?
+2026-10-16 11:19:31,852 | INFO | Agent step 1
+2026-10-16 11:19:40,596 | INFO | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+2026-10-16 11:19:40,647 | INFO | Executing tool=calculator arguments={'expression': '25*5'}
+2026-10-16 11:19:40,648 | INFO | Tool calculator executed successfully.
+2026-10-16 11:19:40,648 | INFO | Agent step 2
+2026-10-16 11:19:42,002 | INFO | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 503 Service Unavailable"
+2026-10-16 11:19:42,004 | INFO | Retrying request in 0.463469 seconds (retry 1 of 2)
+2026-10-16 11:19:52,110 | INFO | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+2026-10-16 11:19:52,121 | WARNING | Final response was not valid AnswerSummary JSON: 1 validation error for AnswerSummary
+  Invalid JSON: trailing characters at line 1 column 4 [type=json_invalid, input_value='25 * 5 = 125', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.13/v/json_invalid
+2026-10-16 11:19:59,029 | INFO | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+2026-10-16 11:19:59,061 | INFO | Final JSON validated successfully after retry.
+
+Agent:
+{
+  "answer": "25 * 5 = 125",
+  "tools_used": [
+    "calculator"
+  ],
+  "confidence": 1.0
+}
+
+### Run 2 — Multi-Tool Execution
+
+**Input**
+```text
+Save a note saying test the agent loop, then show my notes.
+```
+
+**Expected verification:** The agent calls `add_note` and `list_notes`, and the saved note appears in the result.
+
+**Actual output:** 
+You: Save a note saying test the agent loop, then show my notes.
+2026-10-16 11:28:44,783 | INFO | Agent step 1
+2026-10-16 11:28:49,609 | INFO | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+2026-10-16 11:28:49,641 | INFO | Executing tool=add_note arguments={'content': 'test the agent loop'}
+2026-10-16 11:28:49,695 | INFO | Tool add_note executed successfully.
+2026-10-16 11:28:49,697 | INFO | Agent step 2
+2026-10-16 11:28:54,019 | INFO | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+2026-10-16 11:28:54,048 | INFO | Executing tool=list_notes arguments={}
+2026-10-16 11:28:54,053 | INFO | Tool list_notes executed successfully.
+2026-10-16 11:28:54,053 | INFO | Agent step 3
+2026-10-16 11:28:56,189 | INFO | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 503 Service Unavailable"
+2026-10-16 11:28:56,191 | INFO | Retrying request in 0.378892 seconds (retry 1 of 2)
+2026-10-16 11:28:57,554 | INFO | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 503 Service Unavailable"
+2026-10-16 11:28:57,557 | INFO | Retrying request in 0.957737 seconds (retry 2 of 2)
+2026-10-16 11:29:02,797 | INFO | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+2026-10-16 11:29:02,801 | WARNING | Final response was not valid AnswerSummary JSON: 1 validation error for AnswerSummary
+  Invalid JSON: expected ident at line 1 column 2 [type=json_invalid, input_value='I have successfully save...10. test the agent loop', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.13/v/json_invalid
+2026-10-16 11:29:06,716 | INFO | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+2026-10-16 11:29:06,724 | INFO | Final JSON validated successfully after retry.
+
+Agent:
+{
+  "answer": "I have successfully saved the note \"test the agent loop\". Here are all your current notes:\n\n1. Learn agent loops\n2. complete smart tool agent setup\n3. complete smart tool agent setup\n4. Complete my Agentic AI assignment\n5. Learn agent loops\n6. Learn agent loops\n7. My project is SmartToolAgent\n8. Learn agent loops\n9. Learn agent loops\n10. test the agent loop",
+  "tools_used": [
+    "add_note",
+    "list_notes"
+  ],
+  "confidence": 1.0
+}
+
+
+### Run 3 — Error Handling
+
+**Input**
+```text
+Calculate 2 raised to the power of 1000000000.
+```
+
+**Expected verification:** The calculator rejects the excessive exponent, the tool error is handled, and the agent attempts to return a valid final response.
+
+**Actual output:** 
+You: Calculate 2 raised to the power of 1000000000.
+2026-10-16 11:30:15,261 | INFO | Agent step 1
+2026-10-16 11:30:20,326 | INFO | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+2026-10-16 11:30:20,333 | INFO | Executing tool=calculator arguments={'expression': '2 ** 1000000000'}
+2026-10-16 11:30:20,348 | ERROR | Tool execution failed: calculator
+Traceback (most recent call last):
+  File "D:\laptop data\Agentic AI internship at Dawoodtech NextGen\SmartToolAgent\src\agent\agent_loop.py", line 180, in run_agent
+    result = execute_tool(tool_name, arguments)
+  File "D:\laptop data\Agentic AI internship at Dawoodtech NextGen\SmartToolAgent\src\agent\agent_loop.py", line 42, in execute_tool
+    return tool_function(**arguments)
+  File "D:\laptop data\Agentic AI internship at Dawoodtech NextGen\SmartToolAgent\src\agent\tools\calculator.py", line 100, in calculator
+    return evaluate(tree)
+  File "D:\laptop data\Agentic AI internship at Dawoodtech NextGen\SmartToolAgent\src\agent\tools\calculator.py", line 56, in evaluate
+    return evaluate(node.body)
+  File "D:\laptop data\Agentic AI internship at Dawoodtech NextGen\SmartToolAgent\src\agent\tools\calculator.py", line 78, in evaluate
+    raise ValueError(
+        f"Exponent magnitude cannot exceed {MAX_EXPONENT}."
+    )
+ValueError: Exponent magnitude cannot exceed 1000.
+2026-10-16 11:30:20,427 | INFO | Agent step 2
+2026-10-16 11:30:25,263 | INFO | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+2026-10-16 11:30:25,274 | WARNING | Final response was not valid AnswerSummary JSON: 1 validation error for AnswerSummary
+  Invalid JSON: expected value at line 1 column 1 [type=json_invalid, input_value='The calculator tool retu...f the resulting number.', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.13/v/json_invalid
+2026-10-16 11:30:29,181 | INFO | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+2026-10-16 11:30:29,202 | INFO | Final JSON validated successfully after retry.
+
+Agent:
+{
+  "answer": "The calculator tool returned an error because the exponent magnitude cannot exceed 1000. Therefore, calculating $2^{1,000,000,000}$ directly is not supported due to the extreme size of the resulting number.",
+  "tools_used": [
+    "calculator"
+  ],
+  "confidence": 1.0
+}
+
