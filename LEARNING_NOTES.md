@@ -46,18 +46,12 @@ Three system prompts should be tested using the same request and model. Record a
 
 
 
+
 | Prompt | Purpose | Actual Output | Correct Tool Selection? | Valid JSON? | Response Time |
-
 |---|---|---|---|---|---|
-
-| Minimal | Short, general instructions | Pending experiment | Pending | Pending | Pending |
-
-| Strict Tool Execution | Emphasizes appropriate tool use and structured responses | Pending experiment | Pending | Pending | Pending |
-
-| Verbose Instructions | Provides more detailed instructions | Pending experiment | Pending | Pending | Pending |
-
-
-
+| Minimal | Short, general instructions | Answer 400; JSON wrapped in Markdown fences; tool name reported as default_api:calculator | Yes | No | 6.82 seconds |
+| Strict Tool Execution | Emphasizes tool use and structured responses | Answer 400; JSON wrapped in Markdown fences; tool name reported as default_api:calculator | Yes | No | 12.62 seconds |
+| Verbose Instructions | Provides detailed instructions | Answer 400; valid AnswerSummary JSON; calculator listed correctly | Yes | Yes | 9.08 seconds |
 \## 5. Experiment Procedure
 
 
