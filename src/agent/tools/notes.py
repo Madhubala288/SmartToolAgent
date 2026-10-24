@@ -31,26 +31,7 @@ def add_note(content: str) -> dict:
         "content": content,
     }
 
-# Alias so save_note points to the decorated add_note tool
-save_note = add_note
-
-def list_notes() -> list[dict]:
-    """
-    Return all saved notes.
-    """
-    initialize_database()
-    with sqlite3.connect(DB_PATH) as connection:
-        rows = connection.execute(
-            "SELECT id, content FROM notes ORDER BY id"
-        ).fetchall()
-    return [
-        {
-            "id": row[0],
-            "content": row[1],
-        }
-        for row in rows
-    ]
-# Alias
+# Alias so save_note points to the add_note tool
 save_note = add_note
 
 def list_notes() -> list[dict]:
