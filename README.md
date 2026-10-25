@@ -333,3 +333,9 @@ Final JSON validated successfully after retry.
 | Error handling | `calculator` | Excessive exponent rejected; error handled; JSON validated after retry |
 
 **Note:** These three runs demonstrate selected functionality; they do not represent completion of all 15 evaluation questions. See `tests/questions.md` for the individual test cases and their recorded statuses.
+
+## 🎥 Demo Video
+
+Watch the SmartToolAgent demonstration: [View Demo Video](https://drive.google.com/file/d/1R_gPg_XPBF6drT5WzaWbvNqOhIzPwdT4/view?usp=sharing)
+
+The demo showcases calculator execution, note management, and the agent's tool-calling workflow.
